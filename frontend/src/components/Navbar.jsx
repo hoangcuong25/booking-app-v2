@@ -8,7 +8,7 @@ const Navbar = () => {
     const [showMenu, setShowMenu] = useState(false)
 
     return (
-        <div className='flex justify-between items-center mt-3 border-b pb-3'>
+        <div className='flex justify-between items-center mt-3 border-b border-gray-400 pb-3'>
             <img className='w-40' src={assets.logo} alt="" />
 
             <ul className='hidden md:flex gap-6 text-base '>

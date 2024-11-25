@@ -48,36 +48,18 @@ const Appointment = () => {
                 }])
             }
 
-            if (currentDate === today.getDate()) {
-                for (let iTime = 0; iTime < 25; iTime++) {
-                    if (bookingTime[i][iTime]?.hour < 21) {
-                        if (bookingTime[i][iTime]?.minute === 30) {
-                            bookingTime[i]?.push({
-                                hour: bookingTime[i][iTime]?.hour + 1,
-                                minute: 0,
-                            })
-                        } else {
-                            bookingTime[0]?.push({
-                                hour: bookingTime[i][iTime]?.hour,
-                                minute: 30,
-                            })
-                        }
-                    }
-                }
-            } else {
-                for (let iTime = 0; iTime < 25; iTime++) {
-                    if (bookingTime?.[i]?.[iTime]?.hour < 21) {
-                        if (bookingTime[i]?.[iTime]?.minute === 30) {
-                            bookingTime[i]?.push({
-                                hour: bookingTime[i]?.[iTime]?.hour + 1,
-                                minute: 0,
-                            })
-                        } else {
-                            bookingTime[i]?.push({
-                                hour: bookingTime?.[i]?.[iTime]?.hour,
-                                minute: 30,
-                            })
-                        }
+            for (let iTime = 0; iTime < 25; iTime++) {
+                if (bookingTime[i][iTime]?.hour < 21) {
+                    if (bookingTime[i][iTime]?.minute === 30) {
+                        bookingTime[i]?.push({
+                            hour: bookingTime[i][iTime]?.hour + 1,
+                            minute: 0,
+                        })
+                    } else {
+                        bookingTime[i]?.push({
+                            hour: bookingTime[i][iTime]?.hour,
+                            minute: 30,
+                        })
                     }
                 }
             }

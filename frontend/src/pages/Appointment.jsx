@@ -27,29 +27,21 @@ const Appointment = () => {
             currentDate = today.getDate() + i
             bookingDate.push(currentDate)
 
-            if (currentDate === today.getDate()) {
+            if (currentDate === today.getDate() && today.getHours() >= 9) {
                 if (today.getHours() < 21) {
-                    if (today.getHours() >= 9) {
-                        if (today.getMinutes() > 30) {
-                            bookingTime.push([{
-                                hour: today.getHours() + 1,
-                                minute: 0,
-                            }])
-                        } else {
-                            bookingTime.push([{
-                                hour: today.getHours(),
-                                minute: 30,
-                            }])
-                        }
+                    if (today.getMinutes() > 30) {
+                        bookingTime.push([{
+                            hour: today.getHours() + 1,
+                            minute: 0,
+                        }])
                     } else {
                         bookingTime.push([{
-                            hour: 9,
-                            minute: 0,
+                            hour: today.getHours(),
+                            minute: 30,
                         }])
                     }
                 }
-            }
-            else {
+            } else {
                 bookingTime.push([{
                     hour: 9,
                     minute: 0,
@@ -57,34 +49,22 @@ const Appointment = () => {
             }
 
             if (currentDate === today.getDate()) {
-                if (bookingTime[0][0]?.minute === 30) {
-                    bookingTime[0]?.push({
-                        hour: today.getHours() + 1,
-                        minute: 0,
-                    })
-                } else {
-                    bookingTime[0]?.push({
-                        hour: bookingTime[0][0].hour,
-                        minute: 30,
-                    })
-                }
-                for (let iTime = 1; iTime < 25; iTime++) {
-                    if (bookingTime[0][iTime]?.hour < 21) {
-                        if (bookingTime[0][iTime]?.minute === 30) {
-                            bookingTime[0]?.push({
-                                hour: bookingTime[0][iTime]?.hour + 1,
+                for (let iTime = 0; iTime < 25; iTime++) {
+                    if (bookingTime[i][iTime]?.hour < 21) {
+                        if (bookingTime[i][iTime]?.minute === 30) {
+                            bookingTime[i]?.push({
+                                hour: bookingTime[i][iTime]?.hour + 1,
                                 minute: 0,
                             })
                         } else {
                             bookingTime[0]?.push({
-                                hour: bookingTime[0][iTime]?.hour,
+                                hour: bookingTime[i][iTime]?.hour,
                                 minute: 30,
                             })
                         }
                     }
                 }
-            }
-            else {
+            } else {
                 for (let iTime = 0; iTime < 25; iTime++) {
                     if (bookingTime?.[i]?.[iTime]?.hour < 21) {
                         if (bookingTime[i]?.[iTime]?.minute === 30) {

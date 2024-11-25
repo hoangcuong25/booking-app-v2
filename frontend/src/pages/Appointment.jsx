@@ -10,6 +10,8 @@ const Appointment = () => {
     const [docInfo, setDocInfo] = useState()
 
     const [slotBook, setSlotBook] = useState({})
+    const [slotBooked, setSlotBooked] = useState({})
+    const [slotIndex, setSlotIndex] = useState(0)
 
     const getDocInfo = () => {
         setDocInfo(doctors.find((i) => docId === i._id))
@@ -26,7 +28,7 @@ const Appointment = () => {
             bookingDate.push(currentDate)
 
             if (currentDate === today.getDate()) {
-                if (today.getHours() > 9 && today.getHours() < 21) {
+                if (today.getHours() >= 9 && today.getHours() < 21) {
                     if (today.getMinutes() > 30) {
                         bookingTime.push([{
                             hour: today.getHours() + 1,
@@ -48,8 +50,9 @@ const Appointment = () => {
                 }])
             }
 
+
             if (currentDate === today.getDate()) {
-                if (bookingTime[0][0].minute === 30) {
+                if (bookingTime[0][0]?.minute === 30) {
                     bookingTime[0]?.push({
                         hour: today.getHours() + 1,
                         minute: 0,
@@ -60,7 +63,7 @@ const Appointment = () => {
                         minute: 30,
                     })
                 }
-                for (let i = 1; i < 15; i++) {
+                for (let i = 1; i < 25; i++) {
                     if (bookingTime[0][i]?.hour < 21) {
                         if (bookingTime[0][i]?.minute === 30) {
                             bookingTime[0]?.push({
@@ -75,13 +78,17 @@ const Appointment = () => {
                         }
                     }
                 }
+            } else {
+                
             }
+
         }
 
         await setSlotBook({
             date: bookingDate,
             time: bookingTime
         })
+
     }
 
     useEffect(() => {
@@ -89,7 +96,8 @@ const Appointment = () => {
         bookingSlots()
     }, [docId])
 
-    console.log('SlotBook', slotBook)
+    console.log("setSlotBook", slotBook)
+
 
     return (
         <div className='mt-5'>
@@ -122,21 +130,28 @@ const Appointment = () => {
                 <p>Booking Slots</p>
                 <div className='flex gap-8 mt-2'>
                     {slotBook?.date?.map((item, index) => (
-                        <div key={index} className='flex items-center justify-center border border-primary rounded-full w-14 h-20 cursor-pointer'>
+                        <div
+                            key={index}
+                            className={`flex items-center justify-center border border-primary rounded-full w-14 h-20 cursor-pointer ${index === slotIndex ? 'bg-primary text-white' : ''}`}
+                            onClick={() => setSlotIndex(index)}
+                        >
                             <p>{item}</p>
                         </div>
                     ))}
                 </div>
-                <div className='flex gap-8 mt-5'>
-                    {slotBook?.time?.[0].map((item, index) => (
-                        <div key={index} className='flex items-center justify-center border border-gray-400 rounded-full w-20 h-10 cursor-pointer'>
-                            {
-                                item.hour > 12 ?
-                                    <p className='text-sm'>{item.hour}:{item.minute} PM</p>
-                                    : <p className='text-sm'>{item.hour}:{item.minute} AM</p>
-                            }
-                        </div>
-                    ))}
+
+                <div className='overflow-auto'>
+                    <div className='flex gap-8 mt-5'>
+                        {slotBook?.time?.[slotIndex].map((item, index) => (
+                            <div key={index} className='flex items-center justify-center border border-gray-400 rounded-full min-w-20 min-h-10 cursor-pointer'>
+                                {
+                                    item.hour > 12 ?
+                                        <p className='text-sm'>{item.hour}:{item.minute} PM</p>
+                                        : <p className='text-sm'>{item.hour}:{item.minute} AM</p>
+                                }
+                            </div>
+                        ))}
+                    </div>
                 </div>
             </div>
         </div >

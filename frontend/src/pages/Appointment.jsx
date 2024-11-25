@@ -28,17 +28,23 @@ const Appointment = () => {
             bookingDate.push(currentDate)
 
             if (currentDate === today.getDate()) {
-                if (today.getHours() >= 9 && today.getHours() < 21) {
-                    if (today.getMinutes() > 30) {
+                if (today.getHours() < 21) {
+                    if (today.getHours() >= 9) {
+                        if (today.getMinutes() > 30) {
+                            bookingTime.push([{
+                                hour: today.getHours() + 1,
+                                minute: 0,
+                            }])
+                        } else {
+                            bookingTime.push([{
+                                hour: today.getHours(),
+                                minute: 30,
+                            }])
+                        }
+                    } else {
                         bookingTime.push([{
-                            hour: today.getHours() + 1,
+                            hour: 9,
                             minute: 0,
-                        }])
-                    }
-                    else {
-                        bookingTime.push([{
-                            hour: today.getHours(),
-                            minute: 30,
                         }])
                     }
                 }
@@ -49,7 +55,6 @@ const Appointment = () => {
                     minute: 0,
                 }])
             }
-
 
             if (currentDate === today.getDate()) {
                 if (bookingTime[0][0]?.minute === 30) {
@@ -63,32 +68,45 @@ const Appointment = () => {
                         minute: 30,
                     })
                 }
-                for (let i = 1; i < 25; i++) {
-                    if (bookingTime[0][i]?.hour < 21) {
-                        if (bookingTime[0][i]?.minute === 30) {
+                for (let iTime = 1; iTime < 25; iTime++) {
+                    if (bookingTime[0][iTime]?.hour < 21) {
+                        if (bookingTime[0][iTime]?.minute === 30) {
                             bookingTime[0]?.push({
-                                hour: bookingTime[0][i]?.hour + 1,
+                                hour: bookingTime[0][iTime]?.hour + 1,
                                 minute: 0,
                             })
                         } else {
                             bookingTime[0]?.push({
-                                hour: bookingTime[0][i]?.hour,
+                                hour: bookingTime[0][iTime]?.hour,
                                 minute: 30,
                             })
                         }
                     }
                 }
-            } else {
-                
             }
-
+            else {
+                for (let iTime = 0; iTime < 25; iTime++) {
+                    if (bookingTime?.[i]?.[iTime]?.hour < 21) {
+                        if (bookingTime[i]?.[iTime]?.minute === 30) {
+                            bookingTime[i]?.push({
+                                hour: bookingTime[i]?.[iTime]?.hour + 1,
+                                minute: 0,
+                            })
+                        } else {
+                            bookingTime[i]?.push({
+                                hour: bookingTime?.[i]?.[iTime]?.hour,
+                                minute: 30,
+                            })
+                        }
+                    }
+                }
+            }
         }
 
         await setSlotBook({
             date: bookingDate,
             time: bookingTime
         })
-
     }
 
     useEffect(() => {

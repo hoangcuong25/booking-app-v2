@@ -4,7 +4,7 @@ import { NavLink } from 'react-router-dom'
 
 const Navbar = () => {
 
-    const [token, setToken] = useState(false)
+    const [token, setToken] = useState(true)
     const [showMenu, setShowMenu] = useState(false)
 
     return (

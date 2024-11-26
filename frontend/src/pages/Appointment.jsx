@@ -9,67 +9,50 @@ const Appointment = () => {
 
     const [docInfo, setDocInfo] = useState()
 
+    const Day = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT']
+    const [bookingDay, setBookingDay] = useState()
+
     const [slotBook, setSlotBook] = useState({})
-    const [slotBooked, setSlotBooked] = useState({})
-    const [slotIndex, setSlotIndex] = useState(0)
+    const [slotIndexDay, setSlotIndexDay] = useState(0)
+    const [slotIndexTime, setSlotIndexTime] = useState(0)
+
 
     const getDocInfo = () => {
         setDocInfo(doctors.find((i) => docId === i._id))
     }
 
     const bookingSlots = async () => {
-        let today = new Date()
-        let bookingDate = []
-        let bookingTime = []
+        const today = new Date();
+        const bookingDates = [];
+        const bookingTimes = [];
 
-        let currentDate = new Date()
+        setBookingDay(today.getDay())
+
         for (let i = 0; i < 7; i++) {
-            currentDate = today.getDate() + i
-            bookingDate.push(currentDate)
+            // Create a new date object for each day
+            const currentDate = new Date(today);
+            currentDate.setDate(today.getDate() + i); // Safely calculate the date
+            bookingDates.push(currentDate.toISOString().split("T")[0]); // Format as YYYY-MM-DD
 
-            if (currentDate === today.getDate() && today.getHours() >= 9) {
-                if (today.getHours() < 21) {
-                    if (today.getMinutes() > 30) {
-                        bookingTime.push([{
-                            hour: today.getHours() + 1,
-                            minute: 0,
-                        }])
-                    } else {
-                        bookingTime.push([{
-                            hour: today.getHours(),
-                            minute: 30,
-                        }])
-                    }
-                }
-            } else {
-                bookingTime.push([{
-                    hour: 9,
-                    minute: 0,
-                }])
-            }
+            // Initialize the day's time slots
+            const times = [];
+            const startHour = i === 0 ? Math.max(9, today.getHours()) : 9; // Start from current hour or 9 AM
+            const startMinute = i === 0 && today.getMinutes() > 30 ? 0 : today.getMinutes() <= 30 ? 30 : 0;
 
-            for (let iTime = 0; iTime < 25; iTime++) {
-                if (bookingTime[i][iTime]?.hour < 21) {
-                    if (bookingTime[i][iTime]?.minute === 30) {
-                        bookingTime[i]?.push({
-                            hour: bookingTime[i][iTime]?.hour + 1,
-                            minute: 0,
-                        })
-                    } else {
-                        bookingTime[i]?.push({
-                            hour: bookingTime[i][iTime]?.hour,
-                            minute: 30,
-                        })
-                    }
+            for (let hour = startHour; hour < 21; hour++) {
+                for (let minute = hour === startHour ? startMinute : 0; minute < 60; minute += 30) {
+                    times.push({ hour, minute });
                 }
             }
+
+            bookingTimes.push(times);
         }
 
         await setSlotBook({
-            date: bookingDate,
-            time: bookingTime
-        })
-    }
+            date: bookingDates,
+            time: bookingTimes
+        });
+    };
 
     useEffect(() => {
         getDocInfo()
@@ -78,11 +61,10 @@ const Appointment = () => {
 
     console.log("setSlotBook", slotBook)
 
-
     return (
         <div className='mt-5'>
-            <div className='flex gap-5'>
-                <div className='border max-w-64 bg-primary rounded-md'>
+            <div className='flex flex-col md:flex-row gap-5'>
+                <div className='flex border max-w-64 bg-primary rounded-md'>
                     <img src={docInfo?.image} alt="" />
                 </div>
 
@@ -108,26 +90,33 @@ const Appointment = () => {
 
             <div className='mt-6'>
                 <p>Booking Slots</p>
-                <div className='flex gap-8 mt-2'>
-                    {slotBook?.date?.map((item, index) => (
-                        <div
-                            key={index}
-                            className={`flex items-center justify-center border border-primary rounded-full w-14 h-20 cursor-pointer ${index === slotIndex ? 'bg-primary text-white' : ''}`}
-                            onClick={() => setSlotIndex(index)}
-                        >
-                            <p>{item}</p>
-                        </div>
-                    ))}
+                <div className='overflow-auto'>
+                    <div className='flex gap-8 mt-2'>
+                        {slotBook?.date?.map((item, index) => (
+                            <div
+                                key={index}
+                                className={`flex flex-col items-center justify-center border border-primary rounded-full min-w-14 min-h-20 cursor-pointer ${index === slotIndexDay ? 'bg-primary text-white' : ''}`}
+                                onClick={() => setSlotIndexDay(index)}
+                            >
+                                <p>{item.split("-")[2]}</p>
+                                <p>{bookingDay + index < 7 ? Day[bookingDay + index] : Day[bookingDay + index - 7]}</p>
+                            </div>
+                        ))}
+                    </div>
                 </div>
 
                 <div className='overflow-auto'>
                     <div className='flex gap-8 mt-5'>
-                        {slotBook?.time?.[slotIndex].map((item, index) => (
-                            <div key={index} className='flex items-center justify-center border border-gray-400 rounded-full min-w-20 min-h-10 cursor-pointer'>
+                        {slotBook?.time?.[slotIndexDay].map((item, index) => (
+                            <div
+                                key={index}
+                                className={`flex items-center justify-center border border-gray-400 rounded-full min-w-20 min-h-10 cursor-pointer ${index === slotIndexTime ? 'bg-primary text-white' : ''}`}
+                                onClick={() => setSlotIndexTime(index)}
+                            >
                                 {
                                     item.hour > 12 ?
-                                        <p className='text-sm'>{item.hour}:{item.minute} PM</p>
-                                        : <p className='text-sm'>{item.hour}:{item.minute} AM</p>
+                                        <p className='text-sm font-light'>{item.hour}:{item.minute} PM</p>
+                                        : <p className='text-sm font-light'>{item.hour}:{item.minute} AM</p>
                                 }
                             </div>
                         ))}

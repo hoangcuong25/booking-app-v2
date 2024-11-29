@@ -1,14 +1,49 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { FaRegEye } from "react-icons/fa6";
 import { FaRegEyeSlash } from "react-icons/fa6";
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import axios from 'axios'
+import { AppContext } from '../context/Appcontext';
 
 const Login = () => {
 
+    const navigate = useNavigate()
+
+    const { UrlBackend, setToken } = useContext(AppContext)
+
     const [isShow, setIsShow] = useState(false)
 
+    const [email, setEmail] = useState()
+    const [password, setPassword] = useState()
+
+    const login = async (e) => {
+        e.preventDefault()
+
+        if (!email || !password) {
+            toast.error("Missing Field")
+            return
+        }
+
+        try {
+            const { data } = await axios.post(UrlBackend + '/api/user/login', { email, password })
+
+            if (data.success) {
+                toast.success("Login Successfull")
+                setToken(data.token)
+                localStorage.setItem("token", data.token)
+                navigate('/')
+            } else {
+                toast.error(data.message)
+            }
+
+        } catch (e) {
+            toast.error(e.message)
+        }
+    }
+
     return (
-        <form action="">
+        <form action="" onSubmit={login}>
             <div className='flex justify-center mt-10 '>
                 <div className='py-3.5 px-3 border rounded-lg shadow-xl'>
                     <div className='flex flex-col items-center '>
@@ -17,17 +52,25 @@ const Login = () => {
                     </div>
                     <div>
                         <p className='mt-3 text-gray-600'>Email</p>
-                        <input type="text" className=' text-sm border w-[100%] h-10 rounded-lg pl-1.5' />
+                        <input
+                            type="text"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            className=' text-sm border w-[100%] h-10 rounded-lg pl-1.5' />
                     </div>
                     <div className='relative'>
                         <p className='mt-3 text-gray-600'>Password</p>
-                        <input type={`${isShow ? 'text' : 'password'}`} className='text-sm border w-[100%] h-10 rounded-lg pl-1.5 pr-9' />
+                        <input
+                            type={`${isShow ? 'text' : 'password'}`}
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            className='text-sm border w-[100%] h-10 rounded-lg pl-1.5 pr-9' />
                         {isShow ?
                             <FaRegEye className='absolute top-9 right-3 cursor-pointer' onClick={() => setIsShow(false)} />
                             : <FaRegEyeSlash className='absolute top-9 right-3 cursor-pointer' onClick={() => setIsShow(true)} />
                         }
                     </div>
-                    <button className='w-[100%] h-10 bg-primary rounded-lg my-3'>Login</button>
+                    <button className='w-[100%] h-10 bg-primary rounded-lg my-3 text-white'>Login</button>
                     <NavLink to='/register'>
                         <p className='text-gray-500 text-center text-sm'>Create an new account? <span className='text-blue-400 underline'>click here</span></p>
                     </NavLink>

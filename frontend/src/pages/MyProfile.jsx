@@ -1,30 +1,33 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { assets } from '../assets/assets'
+import { AppContext } from '../context/Appcontext'
 
 const MyProfile = () => {
+
+    const { profile } = useContext(AppContext)
 
     const [isEdit, setIsEdit] = useState(false)
 
     return (
         <div className='flex flex-col'>
             <div className='border-b border-gray-400 w-[50%]'>
-                <img src={assets.profile_pic} alt="" className='my-7 rounded-full max-w-28' />
+                <img src={profile?.image} alt="" className='my-7 rounded-full max-w-28' />
                 <p className='text-2xl font-medium'>Name</p>
             </div>
             <div className='flex flex-col gap-1.5 mt-3.5 w-[38%]'>
                 <p className='underline text-gray-500'>CONTACT INFORMATION</p>
                 <div className='grid grid-cols-[1fr_3fr] gap-y-2'>
                     <p>Email: </p>
-                    <p >vancuong25112003@gmail.com</p>
+                    <p >{profile?.email}</p>
                     <p>Phone: </p>
                     {isEdit ?
                         <input type="number" className='border border-gray-400 rounded-md' />
-                        : <p>0359020006</p>
+                        : <p>{profile?.phone}</p>
                     }
                     <p>Address:</p>
                     {isEdit ?
                         <input type="text" className='border border-gray-400 rounded-md' />
-                        : <p>Quang Ninh</p>
+                        : <p>{profile?.address}</p>
                     }
 
                 </div>

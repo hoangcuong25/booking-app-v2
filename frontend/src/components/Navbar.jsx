@@ -1,11 +1,18 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { assets } from '../assets/assets'
 import { NavLink } from 'react-router-dom'
+import { AppContext } from '../context/Appcontext'
 
 const Navbar = () => {
 
-    const [token, setToken] = useState(true)
+    const { token, setToken } = useContext(AppContext)
+
     const [showMenu, setShowMenu] = useState(false)
+
+    const logout = () => {
+        localStorage.clear("token")
+        setToken(false)
+    }
 
     return (
         <div className='flex justify-between items-center mt-3 border-b border-gray-400 pb-3'>
@@ -38,7 +45,7 @@ const Navbar = () => {
                     <img src={assets.profile_pic} className='w-7 h-auto rounded-full' alt="" />
                     <img src={assets.dropdown_icon} alt="" />
 
-                    <div className='absolute hidden group-hover:block right-0 pt-14'>
+                    <div className='absolute hidden group-hover:block right-0 pt-14 z-30'>
                         <ul className='bg-stone-100 w-36 flex flex-col gap-2 rounded-md'>
                             <NavLink to='my-profile' className='hover:bg-stone-200 rounded-md p-2 cursor-pointer'>
                                 <p>My Profile</p>
@@ -48,7 +55,7 @@ const Navbar = () => {
                                 <p>My Appointment</p>
                             </NavLink>
 
-                            <NavLink className='hover:bg-stone-200 rounded-md p-2 cursor-pointer'>
+                            <NavLink onClick={logout} className='hover:bg-stone-200 rounded-md p-2 cursor-pointer'>
                                 <p>Logout</p>
                             </NavLink>
                         </ul>

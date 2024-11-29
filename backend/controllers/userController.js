@@ -61,11 +61,45 @@ const login = async (req, res) => {
     try {
         const { email, password } = req.body
 
-        const isUser = userModel.findOne({ email })
+        if (!email || !password) {
+            return res.status(400).json({ success: false, message: "Missing Field" })
+        }
+
+        const isUser = await userModel.findOne({ email })
 
         if (!isUser) {
             return res.status(400).json({ success: false, message: "User Not Found" })
         }
+
+        const isMatch = await bcrypt.compare(password, isUser.password)
+
+        if (!isMatch) {
+            return res.status(400).json({ success: false, message: "Wrong Password!" })
+        }
+
+        const token = jwt.sign({ id: isUser._id }, process.env.JWT_SECERT, { expiresIn: "72h" })
+
+        return res.status(200).json({
+            success: true,
+            message: "Register Successfully",
+            isUser,
+            token
+        })
+    }
+    catch (error) {
+        console.log(error)
+        res.status(400).json({ success: false, message: error.message })
+    }
+}
+
+// api get profile user
+const getProfile = async (req, res) => {
+    try {
+        const { userId } = req.body
+
+        const user = await userModel.findOne({ userId })
+
+        return res.status(200).json({ success: true, user })
 
     } catch (error) {
         console.log(error)
@@ -73,4 +107,5 @@ const login = async (req, res) => {
     }
 }
 
-export { login, userRegister }
+
+export { login, userRegister,getProfile }

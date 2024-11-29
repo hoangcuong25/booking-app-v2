@@ -58,9 +58,7 @@ const Appointment = () => {
         getDocInfo()
         bookingSlots()
     }, [docId])
-
-    console.log("setSlotBook", slotBook)
-
+    
     return (
         <div className='mt-5'>
             <div className='flex flex-col md:flex-row gap-5'>

@@ -35,7 +35,8 @@ const AppContextProvider = (props) => {
     const value = {
         UrlBackend,
         token, setToken,
-        profile, setProfile
+        profile, setProfile,
+        getProfile
     }
 
     return (

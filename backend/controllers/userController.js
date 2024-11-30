@@ -107,5 +107,39 @@ const getProfile = async (req, res) => {
     }
 }
 
+// api edit profile user 
+const editProfile = async (req, res) => {
+    try {
+        const { userId, name, address, gender, dob, phone } = req.body
+        const image = req?.file
 
-export { login, userRegister,getProfile }
+        if (!name || !address) {
+            return res.status(400).json({ success: false, message: "Name and Address is required." })
+        }
+
+        const user = await userModel.findOne({ userId })
+
+        user.name = name
+        user.address = address
+
+        if (gender) user.gender = gender
+        if (dob) user.dob = dob
+        if (phone) user.phone = phone
+
+        if (image) {
+            const imageUpload = await cloudinary.uploader.upload(image.path, { resource_type: "image" })
+            user.image = imageUpload.secure_url
+        }
+
+        await user.save();
+
+        res.status(200).json({ success: true, message: "Profile updated successfully.", user });
+
+    } catch (error) {
+        console.log(error)
+        res.status(400).json({ success: false, message: error.message })
+    }
+}
+
+
+export { login, userRegister, getProfile, editProfile }

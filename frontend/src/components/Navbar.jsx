@@ -5,7 +5,7 @@ import { AppContext } from '../context/Appcontext'
 
 const Navbar = () => {
 
-    const { token, setToken } = useContext(AppContext)
+    const { token, setToken, profile } = useContext(AppContext)
 
     const [showMenu, setShowMenu] = useState(false)
 
@@ -42,7 +42,7 @@ const Navbar = () => {
 
             {token ?
                 <div className='hidden md:flex gap-2 group relative cursor-pointer'>
-                    <img src={assets.profile_pic} className='w-7 h-auto rounded-full' alt="" />
+                    <img src={profile?.image} className='w-7 h-auto rounded-full' alt="" />
                     <img src={assets.dropdown_icon} alt="" />
 
                     <div className='absolute hidden group-hover:block right-0 pt-14 z-30'>

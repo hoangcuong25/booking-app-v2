@@ -19,8 +19,8 @@ const MyProfile = () => {
     const [isEdit, setIsEdit] = useState(false)
 
     const editProfile = async () => {
-        if (!name || !address) {
-            toast.error('Name and Address are required.')
+        if (!name) {
+            toast.error('Name is required.')
             return
         }
 

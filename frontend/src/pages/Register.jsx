@@ -15,20 +15,19 @@ const Register = () => {
     const [isShow, setIsShow] = useState(false)
 
     const [name, setName] = useState()
-    const [address, setAddress] = useState()
     const [email, setEmail] = useState()
     const [password, setPassword] = useState()
 
     const register = async (e) => {
         e.preventDefault()
 
-        if (!email || !password || !name || !address) {
+        if (!email || !password || !name) {
             toast.error("Missing Field")
             return
         }
 
         try {
-            const { data } = await axios.post(UrlBackend + '/api/user/register', { email, name, password, address })
+            const { data } = await axios.post(UrlBackend + '/api/user/register', { email, name, password })
 
             if (data.success) {
                 toast.success("Register Successfull")
@@ -59,14 +58,6 @@ const Register = () => {
                             type="text"
                             value={name}
                             onChange={(e) => setName(e.target.value)}
-                            className=' text-sm border w-[100%] h-10 rounded-lg pl-1.5' />
-                    </div>
-                    <div>
-                        <p className='mt-3 text-gray-600 text-sm'>Address</p>
-                        <input
-                            type="text"
-                            value={address}
-                            onChange={(e) => setAddress(e.target.value)}
                             className=' text-sm border w-[100%] h-10 rounded-lg pl-1.5' />
                     </div>
                     <div>

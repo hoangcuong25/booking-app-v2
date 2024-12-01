@@ -9,7 +9,7 @@ const userRegister = async (req, res) => {
     try {
         const { name, email, password, address } = req.body
 
-        if (!name || !email || !password || !address) {
+        if (!name || !email || !password ) {
             return res.status(400).json({ success: false, message: "Missing Field" })
         }
 
@@ -34,7 +34,6 @@ const userRegister = async (req, res) => {
             name: name,
             email: email,
             password: hashedPassword,
-            address: address
         }
 
         const newUser = userModel(userData)
@@ -113,15 +112,15 @@ const editProfile = async (req, res) => {
         const { userId, name, address, gender, dob, phone } = req.body
         const image = req?.file
 
-        if (!name || !address) {
-            return res.status(400).json({ success: false, message: "Name and Address is required." })
+        if (!name) {
+            return res.status(400).json({ success: false, message: "Name is required." })
         }
 
         const user = await userModel.findOne({ userId })
 
         user.name = name
-        user.address = address
 
+        if (address) user.address = address
         if (gender) user.gender = gender
         if (dob) user.dob = dob
         if (phone) user.phone = phone

@@ -4,6 +4,8 @@ import 'dotenv/config'
 import connectDB from './config/mongodb.js'
 import connectCloudinary from './config/cloudinary.js'
 import userRouter from './routes/userRoute.js'
+import docRouter from './routes/docRoute.js'
+import adminRouter from './routes/adminRoute.js'
 
 // app config
 const app = express()
@@ -17,6 +19,7 @@ app.use(cors())
 
 // api endpoints
 app.use('/api/user', userRouter)
-
+app.use('/api/doctor', docRouter)
+app.use('/api/admin', adminRouter)
 
 app.listen(port, () => console.log('Sever Started', port))

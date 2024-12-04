@@ -1,6 +1,7 @@
 /* eslint-disable react/jsx-key */
 import React from 'react'
 import { specialityData } from '../assets/assets'
+import { NavLink } from 'react-router-dom'
 
 const Speciality = () => {
     return (
@@ -10,10 +11,14 @@ const Speciality = () => {
 
             <div className='flex justify-center flex-wrap gap-7 '>
                 {specialityData.map((item, index) => (
-                    <div key={index} className='flex flex-col items-center'>
+                    <NavLink
+                        key={index}
+                        className='flex flex-col items-center hover:translate-y-[-10px] transition-all duration-500'
+                        to={`/all-doctors/${item.speciality}`}
+                    >
                         <img src={item.image} className='size-20' alt="" />
                         <p>{item.speciality}</p>
-                    </div>
+                    </NavLink>
                 ))}
             </div>
         </div>

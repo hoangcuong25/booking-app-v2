@@ -1,19 +1,20 @@
 /* eslint-disable react/jsx-key */
-import React from 'react'
+import React, { useContext } from 'react'
 import { doctors } from '../assets/assets'
 import { NavLink } from 'react-router-dom'
+import { AppContext } from '../context/Appcontext'
 
 const TopDoctor = () => {
 
+    const { allDoctor } = useContext(AppContext)
 
-    
     return (
         <div className='flex flex-col items-center gap-5 mt-14'>
             <p className='text-3xl font-medium'>Top Doctors To Book</p>
             <p>Simply browse through our extensive list of trusted doctors.</p>
 
             <div className='flex flex-wrap gap-5 justify-center items-center'>
-                {doctors.slice(0, 10).map((item, index) => (
+                {allDoctor?.slice(0, 10).map((item, index) => (
                     <NavLink
                         key={index}
                         className='border border-blue-200 rounded-lg cursor-pointer hover:translate-y-[-10px] transition-all duration-500'

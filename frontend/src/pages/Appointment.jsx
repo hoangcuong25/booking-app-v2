@@ -1,11 +1,13 @@
 /* eslint-disable react/jsx-key */
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { assets, doctors } from '../assets/assets'
+import { assets } from '../assets/assets'
+import { AppContext } from '../context/Appcontext'
 
 const Appointment = () => {
 
     const { docId } = useParams()
+    const { allDoctor } = useContext(AppContext)
 
     const [docInfo, setDocInfo] = useState()
 
@@ -18,7 +20,7 @@ const Appointment = () => {
 
 
     const getDocInfo = () => {
-        setDocInfo(doctors.find((i) => docId === i._id))
+        setDocInfo(allDoctor?.find((i) => docId === i._id))
     }
 
     const bookingSlots = async () => {
@@ -58,7 +60,7 @@ const Appointment = () => {
         getDocInfo()
         bookingSlots()
     }, [docId])
-    
+
     return (
         <div className='mt-5'>
             <div className='flex flex-col md:flex-row gap-5'>

@@ -12,6 +12,7 @@ const AppContextProvider = (props) => {
     const [token, setToken] = useState(localStorage.getItem("token") ? localStorage.getItem("token") : false)
 
     const [profile, setProfile] = useState()
+    const [allDoctor, setAllDoctor] = useState()
 
     const getProfile = async () => {
         try {
@@ -26,6 +27,23 @@ const AppContextProvider = (props) => {
         }
     }
 
+    const getAllDoctor = async () => {
+        try {
+            const { data } = await axios.get(UrlBackend + '/api/doctor/all-doc')
+
+            if (data.success) {
+                await setAllDoctor(data.allDoc)
+            }
+
+        } catch (e) {
+            toast.error(e.message)
+        }
+    }
+
+    useEffect(() => {
+        getAllDoctor()
+    }, [])
+
     useEffect(() => {
         if (token) {
             getProfile()
@@ -36,7 +54,9 @@ const AppContextProvider = (props) => {
         UrlBackend,
         token, setToken,
         profile, setProfile,
-        getProfile
+        getProfile,
+        allDoctor, setAllDoctor,
+        getAllDoctor
     }
 
     return (

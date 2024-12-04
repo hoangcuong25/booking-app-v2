@@ -1,21 +1,25 @@
-import React, { useEffect, useState } from 'react'
-import { doctors } from '../assets/assets'
+import { useContext, useEffect, useState } from 'react'
 import { NavLink, useParams } from 'react-router-dom'
+import { AppContext } from '../context/Appcontext'
 
 const AllDoctors = () => {
 
     const { speciality } = useParams()
-    const [doctor, setDoctor] = useState()
+    const { allDoctor, setAllDoctor, getAllDoctor } = useContext(AppContext)
 
-    const filterDoctor = () => {
-        setDoctor(doctors.filter((i) => (i.speciality === speciality)))
+
+    const filterDoctor = async () => {
+        await getAllDoctor()
+        setAllDoctor(allDoctor?.filter((i) => (i.speciality === speciality)))
     }
 
     useEffect(() => {
         if (speciality) {
             filterDoctor()
-        } else {
-            setDoctor(doctors)
+        }
+        if (speciality === undefined) {
+            getAllDoctor()
+            setAllDoctor(allDoctor)
         }
     }, [speciality])
 
@@ -63,7 +67,7 @@ const AllDoctors = () => {
                 </div>
 
                 <div className='flex flex-wrap gap-5 justify-center items-center'>
-                    {doctor?.map((item, index) => (
+                    {allDoctor?.map((item, index) => (
                         <NavLink
                             key={index}
                             className='border border-blue-200 rounded-lg cursor-pointer hover:translate-y-[-10px] transition-all duration-500'

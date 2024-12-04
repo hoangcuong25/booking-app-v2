@@ -6,12 +6,12 @@ const adminLoign = async (req, res) => {
         const { email, password } = req.body
 
         if (email !== process.env.AMDIN_EMAIL || password !== process.env.AMDIN_PASSORD) {
-            return res.status(400).json({ success: true, message: "Wrong email or password" })
+            return res.status(400).json({ success: false, message: "Wrong email or password" })
         }
 
-        const token = jwt.sign({}, process.env.JWT_SECERT, { expiresIn: "72h" })
+        const aToken = jwt.sign({ email: process.env.AMDIN_EMAIL, password: process.env.AMDIN_PASSORD }, process.env.JWT_SECERT, { expiresIn: "72h" })
 
-        res.status(200).json({ success: true, message: "Login successfully", token })
+        res.status(200).json({ success: true, message: "Login successfully", aToken })
 
     } catch (error) {
         console.log(error)
@@ -19,4 +19,5 @@ const adminLoign = async (req, res) => {
     }
 }
 
-export {adminLoign}
+
+export { adminLoign }

@@ -9,9 +9,9 @@ import AddDoctor from './page/admin/AddDoctor'
 
 const App = () => {
 
-  const { aToken } = useContext(AppContext)
+  const { aToken, dToken } = useContext(AppContext)
 
-  return aToken ? (
+  return aToken || dToken ? (
     <div className='my-3.5 mx-8'>
       <Navbar />
       <div className='flex mt-10'>

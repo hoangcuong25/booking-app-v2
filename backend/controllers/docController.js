@@ -81,7 +81,7 @@ const addDoctor = async (req, res) => {
         const userData = {
             name: name,
             email: email,
-            password: password,
+            password: hashedPassword,
             image: imageUpload.secure_url,
             speciality: speciality,
             degree: degree,

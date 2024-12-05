@@ -32,15 +32,14 @@ const Login = () => {
                     setAToken(data.aToken)
                     localStorage.setItem("aToken", data.aToken)
                 }
-
             } catch (e) {
-                toast.error(e.message)
+                toast.error(e.response.data.message)
             }
         } else {
             try {
                 const { data } = await axios.post(UrlBackend + '/api/doctor/login', { email, password })
 
-                if(data.success) {
+                if (data.success) {
                     toast.success('Login Successfully')
                     setDToken(data.dToken)
                     localStorage.setItem("dToken", data.dToken)
